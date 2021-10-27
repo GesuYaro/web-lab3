@@ -11,6 +11,18 @@ public class Result implements Serializable {
     private long executionTime;
     private boolean result;
 
+    public Result() {
+    }
+
+    public Result(double x, double y, double r, String currentTime, long executionTime, boolean result) {
+        this.x = x;
+        this.y = y;
+        this.r = r;
+        this.currentTime = currentTime;
+        this.executionTime = executionTime;
+        this.result = result;
+    }
+
     public double getX() {
         return x;
     }

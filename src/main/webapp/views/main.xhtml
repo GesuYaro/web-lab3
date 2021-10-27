@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:a="http://xmlns.jcp.org/jsf/passthrough">
+<f:view>
+    <h:head>
+        <link rel="stylesheet" href="../resources/css/main.css"/>
+        <link rel="stylesheet" href="../resources/css/divs.css"/>
+        <title>web lab №3</title>
+    </h:head>
+    <h:body>
+        <div class="leftside">
+            <h:form>
+                <div class="${areaCheckBean.XCorrect ? '' : 'error-hovered'}">
+                    <h:outputLabel>
+                        X:
+                        <h:selectOneMenu value="${areaCheckBean.x}">
+                            <f:selectItem itemValue="-2" itemLabel="-2" />
+                            <f:selectItem itemValue="-1.5" itemLabel="-1.5" />
+                            <f:selectItem itemValue="-1" itemLabel="-1" />
+                            <f:selectItem itemValue="-0.5" itemLabel="-0.5" />
+                            <f:selectItem itemValue="0" itemLabel="0" />
+                            <f:selectItem itemValue="0.5" itemLabel="0.5" />
+                            <f:selectItem itemValue="1" itemLabel="1" />
+                        </h:selectOneMenu>
+                    </h:outputLabel>
+                </div>
+                <div class="${areaCheckBean.YCorrect ? '' : 'error-hovered'}">
+                    <h:outputLabel>
+                        Y:
+                        <h:inputText a:placeholder="от -3 до 3" value="${areaCheckBean.y}"/>
+                    </h:outputLabel>
+                </div>
+                <div class="${areaCheckBean.RCorrect ? '' : 'error-hovered'}">
+                    <h:outputLabel>
+                        R:
+                        <p:spinner value="${areaCheckBean.r}" min="1" max="3" stepFactor="0.5"/>
+                    </h:outputLabel>
+                </div>
+                <h:commandButton value="Проверить" action="${areaCheckBean.submit()}"/>
+            </h:form>
+
+            <h:dataTable id="response_table" value = "#{areaCheckBean.history}" var ="response">
+
+                <h:column>
+                    <f:facet name = "header">Результат</f:facet>
+                    #{response.result}
+                </h:column>
+
+                <h:column>
+                    <f:facet name = "header">X</f:facet>
+                    #{response.x}
+                </h:column>
+
+                <h:column>
+                    <f:facet name = "header">Y</f:facet>
+                    #{response.y}
+                </h:column>
+
+                <h:column>
+                    <f:facet name = "header">R</f:facet>
+                    #{response.r}
+                </h:column>
+
+                <h:column>
+                    <f:facet name = "header">Время</f:facet>
+                    #{response.currentTime}
+                </h:column>
+
+                <h:column>
+                    <f:facet name = "header">Выполнение</f:facet>
+                    #{response.executionTime}
+                </h:column>
+            </h:dataTable>
+        </div>
+        <div class="rightside">
+            <!--            add pic-->
+        </div>
+    </h:body>
+</f:view>
+</html>

@@ -10,13 +10,6 @@ import java.time.ZonedDateTime;
 @ApplicationScoped
 public class TimeBean implements Serializable {
 
-    private String day;
-    private String month;
-    private String year;
-    private String hour;
-    private String min;
-    private String sec;
-
     public String getDay() {
         return format(ZonedDateTime.now().getDayOfMonth());
     }
