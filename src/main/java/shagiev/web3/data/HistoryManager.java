@@ -4,11 +4,11 @@ import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
-public class History implements Serializable {
+public class HistoryManager implements Serializable {
 
     private List<Result> history;
 
-    public History() {
+    public HistoryManager() {
         this.history = new LinkedList<>();
     }
 

@@ -1,4 +1,4 @@
-package shagiev.web3.data;
+package shagiev.web3.managers;
 
 public interface Validator {
 

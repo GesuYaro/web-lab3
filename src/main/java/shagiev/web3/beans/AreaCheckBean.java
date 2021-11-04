@@ -1,10 +1,19 @@
 package shagiev.web3.beans;
 
 import shagiev.web3.data.*;
+import shagiev.web3.database.DatabaseConnector;
+import shagiev.web3.database.DatabaseManager;
+import shagiev.web3.managers.AreaChecker;
+import shagiev.web3.managers.OptionAreaChecker;
+import shagiev.web3.managers.OptionValidator;
+import shagiev.web3.managers.Validator;
+import shagiev.web3.util.LoginGetter;
 
 import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
 import java.io.Serializable;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
@@ -13,9 +22,30 @@ import java.util.List;
 @ApplicationScoped
 public class AreaCheckBean implements Serializable {
 
-    private final History history = new History();
-    private final AreaChecker areaChecker = new OptionAreaChecker();
-    private final Validator validator = new OptionValidator();
+    private final HistoryManager historyManager;
+    private final AreaChecker areaChecker;
+    private final Validator validator;
+    private DatabaseManager databaseManager;
+
+    public AreaCheckBean() {
+        historyManager = new HistoryManager();
+        areaChecker = new OptionAreaChecker();
+        validator = new OptionValidator();
+        DatabaseConnector connector;
+        String[] dbinfo = LoginGetter.getLoginInfo("dbinfo");
+        if (dbinfo != null) {
+            connector = new DatabaseConnector(dbinfo[0], Integer.parseInt(dbinfo[1]), dbinfo[3], dbinfo[4], dbinfo[5]);
+            Connection connection = null;
+            try {
+                connection = connector.getConnection();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            if (connection != null) {
+                databaseManager = new DatabaseManager(connection);
+            }
+        }
+    }
 
     private String x;
     private String y;
@@ -81,12 +111,24 @@ public class AreaCheckBean implements Serializable {
                     System.nanoTime() - start,
                     areaChecker.check(numX, numY, numR));
 
-            history.addResult(result);
+//            historyManager.addResult(result);
+            try {
+                databaseManager.addNewResult(result);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     public List<Result> getHistory() {
-        return history.getHistory();
+//        return historyManager.getHistory();
+        List<Result> list = null;
+        try {
+            list = databaseManager.getHistory();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
     }
 
     public boolean isXCorrect() {
