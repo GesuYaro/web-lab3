@@ -16,6 +16,8 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 @ManagedBean
@@ -49,7 +51,7 @@ public class AreaCheckBean implements Serializable {
 
     private String x;
     private String y;
-    private String r;
+    private String r = "3";
 
     private boolean isXCorrect = true;
     private boolean isYCorrect = true;
@@ -129,6 +131,12 @@ public class AreaCheckBean implements Serializable {
             e.printStackTrace();
         }
         return list;
+    }
+
+    public List<Result> getReversedHistory() {
+        List<Result> copy = new LinkedList<>(history.getHistory());
+        Collections.reverse(copy);
+        return copy;
     }
 
     public boolean isXCorrect() {
