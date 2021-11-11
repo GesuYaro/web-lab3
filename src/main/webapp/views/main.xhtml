@@ -4,21 +4,30 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
       xmlns:p="http://primefaces.org/ui"
       xmlns:a="http://xmlns.jcp.org/jsf/passthrough">
 <f:view>
     <h:head>
         <link rel="stylesheet" href="../resources/css/main.css"/>
         <link rel="stylesheet" href="../resources/css/divs.css"/>
+        <h:outputScript library="js" name="updateRadius.js" target="head"/>
+        <h:outputScript library="js" name="clickHandler.js" target="head"/>
+        <script type="text/javascript" src="https://code.jquery.com/jquery-3.1.1.js"></script>
         <title>web lab №3</title>
     </h:head>
     <h:body>
+        <div id="redirect">
+            <h:form>
+                <h:commandButton styleClass="redir" action="toIndexPage" value="Назад"/>
+            </h:form>
+        </div>
         <div class="leftside">
             <h:form>
                 <div class="${areaCheckBean.XCorrect ? '' : 'error-hovered'}">
                     <h:outputLabel>
                         X:
-                        <h:selectOneMenu value="${areaCheckBean.x}">
+                        <h:selectOneMenu styleClass="xMenu" value="${areaCheckBean.x}">
                             <f:selectItem itemValue="-2" itemLabel="-2" />
                             <f:selectItem itemValue="-1.5" itemLabel="-1.5" />
                             <f:selectItem itemValue="-1" itemLabel="-1" />
@@ -32,19 +41,19 @@
                 <div class="${areaCheckBean.YCorrect ? '' : 'error-hovered'}">
                     <h:outputLabel>
                         Y:
-                        <h:inputText a:placeholder="от -3 до 3" value="${areaCheckBean.y}"/>
+                        <h:inputText styleClass="yInput" a:placeholder="от -3 до 3" value="${areaCheckBean.y}"/>
                     </h:outputLabel>
                 </div>
-                <div class="${areaCheckBean.RCorrect ? '' : 'error-hovered'}">
+                <div id="rContainer" class="${areaCheckBean.RCorrect ? '' : 'error-hovered'}">
                     <h:outputLabel>
                         R:
-                        <p:spinner value="${areaCheckBean.r}" min="1" max="3" stepFactor="0.5"/>
+                        <p:spinner value="${areaCheckBean.r}" min="1" max="3" stepFactor="0.5" widgetVar="rSpinner" onchange="updateRadius(event)"/>
                     </h:outputLabel>
                 </div>
-                <h:commandButton value="Проверить" action="${areaCheckBean.submit()}"/>
+                <h:commandButton styleClass="submitButton" value="Проверить" action="${areaCheckBean.submit()}"/>
             </h:form>
 
-            <h:dataTable id="response_table" value = "#{areaCheckBean.history}" var ="response">
+            <h:dataTable id="response_table" value = "#{areaCheckBean.reversedHistory}" var ="response">
 
                 <h:column>
                     <f:facet name = "header">Результат</f:facet>
@@ -78,7 +87,99 @@
             </h:dataTable>
         </div>
         <div class="rightside">
-            <!--            add pic-->
+            <svg
+                    id="graphic"
+                    width="300"
+                    height="300"
+                    onclick="checkHit(event)"
+            >
+                <line
+                        x1="0"
+                        x2="100%"
+                        y1="50%"
+                        y2="50%"
+                        stroke="aliceblue"
+                        stroke-width="2"
+                />
+                <line
+                        x1="97%"
+                        x2="100%"
+                        y1="47%"
+                        y2="50%"
+                        stroke="aliceblue"
+                        stroke-width="2"
+                />
+                <line
+                        x1="97%"
+                        x2="100%"
+                        y1="53%"
+                        y2="50%"
+                        stroke="aliceblue"
+                        stroke-width="2"
+                />
+
+                <line
+                        x1="50%"
+                        x2="50%"
+                        y1="0"
+                        y2="100%"
+                        stroke="aliceblue"
+                        stroke-width="2"
+                />
+                <line
+                        x1="47%"
+                        x2="50%"
+                        y1="3%"
+                        y2="0"
+                        stroke="aliceblue"
+                        stroke-width="2"
+                />
+                <line
+                        x1="53%"
+                        x2="50%"
+                        y1="3%"
+                        y2="0"
+                        stroke="aliceblue"
+                        stroke-width="2"
+                />
+                <c:forEach begin="30" end="270" step="30" varStatus="loop">
+                    <line
+                            x1="#{loop.count * 30}"
+                            x2="#{loop.count * 30}"
+                            y1="49%"
+                            y2="51%"
+                            stroke="aliceblue"
+                            stroke-width="1"
+                    />
+
+                    <line
+                            x1="49%"
+                            x2="51%"
+                            y1="#{loop.count * 30}"
+                            y2="#{loop.count * 30}"
+                            stroke="aliceblue"
+                            stroke-width="1"
+                    />
+                </c:forEach>
+                <path
+                        d="
+                              M 150 #{150 + areaCheckBean.r * 15}
+                              L #{150 - areaCheckBean.r * 30} #{150 + areaCheckBean.r * 15}
+                              L #{150 - areaCheckBean.r * 30} 150
+                              A #{areaCheckBean.r * 30} #{areaCheckBean.r * 30} 0 0 1 150 #{150 - areaCheckBean.r * 30}
+                              L #{150 + areaCheckBean.r * 30} 150
+                              L 150 150
+                              "
+                        stroke="aliceblue"
+                        stroke-width="2"
+                        fill="#9a3ce7"
+                        fill-opacity="0.5"
+                        id="graph-path"
+                />
+                <ui:repeat value="#{areaCheckBean.history}" var="point">
+                    <circle cx="#{point.x*30 + 150}" cy="#{150 - point.y*30}" r="5" fill='#{point.result ? "#00FF00" : "#FF0000"}'/>
+                </ui:repeat>
+            </svg>
         </div>
     </h:body>
 </f:view>
