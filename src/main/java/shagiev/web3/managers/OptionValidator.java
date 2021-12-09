@@ -8,9 +8,10 @@ public class OptionValidator implements Validator, Serializable {
         Double returningX = null;
         try {
             double numX = Double.parseDouble(x);
-            if (numX >= -2 && numX <= 1) {
-                returningX = numX;
-            }
+//            if (numX >= -2 && numX <= 1) {
+//                returningX = numX;
+//            }
+            returningX = numX;
         } catch (NumberFormatException ignored) {}
         return returningX;
     }
@@ -20,9 +21,10 @@ public class OptionValidator implements Validator, Serializable {
         Double returningY = null;
         try {
             double numY = Double.parseDouble(y);
-            if (numY >= -3 && numY <= 3) {
-                returningY = numY;
-            }
+//            if (numY >= -3 && numY <= 3) {
+//                returningY = numY;
+//            }
+            returningY = numY;
         } catch (NumberFormatException ignored) {}
         return returningY;
     }
@@ -32,9 +34,10 @@ public class OptionValidator implements Validator, Serializable {
         Double returningR = null;
         try {
             double numR = Double.parseDouble(r);
-            if (numR >= 1 && numR <= 3) {
-                returningR = numR;
-            }
+//            if (numR >= 1 && numR <= 3) {
+//                returningR = numR;
+//            }
+            returningR = numR;
         } catch (NumberFormatException ignored) {}
         return returningR;
     }

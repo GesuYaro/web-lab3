@@ -2,6 +2,8 @@ package shagiev.web3.database;
 
 import shagiev.web3.data.Result;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.LinkedList;
@@ -25,7 +27,7 @@ public class DatabaseManager {
         addStatement.setFloat(2, (float) result.getX());
         addStatement.setFloat(3, (float) result.getY());
         addStatement.setFloat(4, (float) result.getR());
-        addStatement.setDate(5, Date.valueOf(result.getCurrentTime()));
+        addStatement.setString(5, result.getCurrentTime());
         addStatement.setInt(6, (int) result.getExecutionTime());
         rows = addStatement.executeUpdate();
         return rows;
@@ -37,13 +39,20 @@ public class DatabaseManager {
         ResultSet resultSet = getAllStatement.executeQuery();
         while (resultSet.next()) {
             boolean res = resultSet.getBoolean("result");
-            double x = resultSet.getFloat("x");
-            double y = resultSet.getFloat("y");
-            double r = resultSet.getFloat("r");
-            Date time = resultSet.getDate("time");
+            double x = round(resultSet.getFloat("x"), 2);
+            double y = round(resultSet.getFloat("y"), 2);
+            double r = round(resultSet.getFloat("r"), 2);
+            String time = resultSet.getString("time");
             long execution_time = resultSet.getInt("execution_time");
-            list.add(new Result(x, y, r, time.toString(), execution_time, res));
+            list.add(new Result(x, y, r, time, execution_time, res));
         }
         return list;
+    }
+
+    private static double round(double value, int places) {
+        if (places < 0) throw new IllegalArgumentException();
+        BigDecimal bd = new BigDecimal(Double.toString(value));
+        bd = bd.setScale(places, RoundingMode.HALF_UP);
+        return bd.doubleValue();
     }
 }

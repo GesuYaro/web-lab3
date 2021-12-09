@@ -15,10 +15,7 @@ import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 @ManagedBean
 @ApplicationScoped
@@ -35,8 +32,12 @@ public class AreaCheckBean implements Serializable {
         validator = new OptionValidator();
         DatabaseConnector connector;
         String[] dbinfo = LoginGetter.getLoginInfo("dbinfo");
+        System.out.println("========================================");
+//        System.out.println(dbinfo.length);
+//        Arrays.stream(dbinfo).forEach(System.out::println);
+//        System.out.println("========================================");
         if (dbinfo != null) {
-            connector = new DatabaseConnector(dbinfo[0], Integer.parseInt(dbinfo[1]), dbinfo[3], dbinfo[4], dbinfo[5]);
+            connector = new DatabaseConnector(dbinfo[0], Integer.parseInt(dbinfo[1]), dbinfo[2], dbinfo[3], dbinfo[4]);
             Connection connection = null;
             try {
                 connection = connector.getConnection();
@@ -89,7 +90,6 @@ public class AreaCheckBean implements Serializable {
         Double numR = validator.validateR(r);
 
         if (numX == null) {
-
             isXCorrect = false;
         } else {
             isXCorrect = true;
@@ -134,7 +134,7 @@ public class AreaCheckBean implements Serializable {
     }
 
     public List<Result> getReversedHistory() {
-        List<Result> copy = new LinkedList<>(history.getHistory());
+        List<Result> copy = new LinkedList<>(getHistory());
         Collections.reverse(copy);
         return copy;
     }
