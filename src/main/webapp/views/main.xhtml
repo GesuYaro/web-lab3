@@ -13,6 +13,7 @@
         <link rel="stylesheet" href="../resources/css/divs.css"/>
         <h:outputScript library="js" name="updateRadius.js" target="head"/>
         <h:outputScript library="js" name="clickHandler.js" target="head"/>
+        <h:outputScript library="js" name="validator.js" target="head"/>
         <script type="text/javascript" src="https://code.jquery.com/jquery-3.1.1.js"></script>
         <title>web lab №3</title>
     </h:head>
@@ -24,10 +25,10 @@
         </div>
         <div class="leftside">
             <h:form>
-                <div class="${areaCheckBean.XCorrect ? '' : 'error-hovered'}">
+                <div id="xContainer" class="input-container">
                     <h:outputLabel>
                         X:
-                        <h:selectOneMenu styleClass="xMenu" value="${areaCheckBean.x}">
+                        <h:selectOneMenu styleClass="xMenu">
                             <f:selectItem itemValue="-2" itemLabel="-2" />
                             <f:selectItem itemValue="-1.5" itemLabel="-1.5" />
                             <f:selectItem itemValue="-1" itemLabel="-1" />
@@ -37,20 +38,25 @@
                             <f:selectItem itemValue="1" itemLabel="1" />
                         </h:selectOneMenu>
                     </h:outputLabel>
+                    <h:inputText id="xMenu" styleClass="xMenu" value="${areaCheckBean.x}" a:hidden="true"/>
                 </div>
-                <div class="${areaCheckBean.YCorrect ? '' : 'error-hovered'}">
+                <div id="yContainer" class="input-container">
                     <h:outputLabel>
                         Y:
-                        <h:inputText styleClass="yInput" a:placeholder="от -3 до 3" value="${areaCheckBean.y}"/>
+                        <h:inputText styleClass="yInput" a:placeholder="от -3 до 3"/>
                     </h:outputLabel>
+                    <h:inputText id="yInput" styleClass="yInput" value="${areaCheckBean.y}" a:hidden="true"/>
                 </div>
-                <div id="rContainer" class="${areaCheckBean.RCorrect ? '' : 'error-hovered'}">
+                <div id="rContainer" class="input-container">
                     <h:outputLabel>
                         R:
-                        <p:spinner value="${areaCheckBean.r}" min="1" max="3" stepFactor="0.5" widgetVar="rSpinner" onchange="updateRadius(event)"/>
+                        <p:spinner id="rSpinner" value="${areaCheckBean.r}" min="1" max="3" stepFactor="0.5" widgetVar="rSpinner" onchange="updateRadius(event)"/>
                     </h:outputLabel>
                 </div>
-                <h:commandButton styleClass="submitButton" value="Проверить" action="${areaCheckBean.submit()}"/>
+                <input type="button" class="submitButton" value="Проверить" onclick="handleForm()"/>
+                <h:commandButton styleClass="mainSubmitButton" value="Проверить" a:hidden="true">
+                    <f:ajax execute="xMenu yInput rSpinner" listener="${areaCheckBean.submit()}" render="response_table rContainer yContainer xContainer imageContainer"/>
+                </h:commandButton>
             </h:form>
 
             <h:dataTable id="response_table" value = "#{areaCheckBean.reversedHistory}" var ="response">
@@ -86,6 +92,7 @@
                 </h:column>
             </h:dataTable>
         </div>
+        <h:panelGroup id="imageContainer">
         <div class="rightside">
             <svg
                     id="graphic"
@@ -181,6 +188,7 @@
                 </ui:repeat>
             </svg>
         </div>
+        </h:panelGroup>
     </h:body>
 </f:view>
 </html>
